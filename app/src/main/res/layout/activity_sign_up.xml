@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9797EA"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".LogIn">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_circular_box"
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign up"
+                android:textSize="24sp"
+                android:textColor="#000fff"
+                android:textStyle="bold"
+                android:layout_marginLeft="120dp"
+
+                android:layout_marginTop="16dp" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:inputType="text"
+                android:hint="Your Name"
+                android:drawableLeft="@drawable/baseline_account_box_24"
+                android:textStyle="bold"
+                android:id="@+id/Sign_up_name"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:inputType="number"
+                android:hint="Age"
+                android:textStyle="bold"
+                android:id="@+id/Sign_up_age"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:inputType="number"
+                android:hint="Height in cm"
+                android:textStyle="bold"
+                android:id="@+id/Sign_up_Height"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:inputType="text"
+                android:hint="Email"
+                android:drawableLeft="@drawable/baseline_email_24"
+                android:textStyle="bold"
+                android:id="@+id/Sign_up_mail"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:id="@+id/Sign_up_Password"
+                android:hint="Password"
+                android:drawableLeft="@drawable/baseline_info_24"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+            <!-- Other content here -->
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:id="@+id/Signup_Button"
+                android:background="@drawable/submit_button"
+                android:text="Sign up"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
