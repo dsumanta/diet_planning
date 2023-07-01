@@ -7,8 +7,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.chatapp.HomeActivity
-import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -78,6 +76,8 @@ class SignUp : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // User signed up successfully, store the user data in Firestore
+                    val currentUser = mAuth.currentUser
+                    val userId = currentUser?.uid
                     val user = hashMapOf(
                         "name" to name,
                         "age" to age,
@@ -85,21 +85,20 @@ class SignUp : AppCompatActivity() {
                         "height" to height
                     )
 
-                    firestore.collection("users")
-                        .document(email)
-                        .set(user)
-                        .addOnSuccessListener {
-                            // Data stored successfully
-                            val intent = Intent(this, HomeActivity::class.java)
-                            intent.putExtra("name", name)
-                            intent.putExtra("email", email)
-                            startActivity(intent)
-                            finish()
-                        }
-                        .addOnFailureListener { e ->
-                            // Failed to store data
-                            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
+                    if (userId != null) {
+                        firestore.collection("users")
+                            .document(userId)
+                            .set(user)
+                            .addOnSuccessListener {
+                                val intent = Intent(this, HomeActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                // Failed to store data
+                                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 } else {
                     if (task.exception is FirebaseAuthUserCollisionException) {
                         // Account already exists with the entered email

@@ -10,13 +10,14 @@ import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class LogIn : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var loginBttn: Button
-    private var db=Firebase.firestore
+    private var db=FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,6 +27,8 @@ class LogIn : AppCompatActivity() {
         val email: EditText = findViewById(R.id.email)
         val password: EditText = findViewById(R.id.login_Password)
         val createAccount: TextView = findViewById(R.id.create_account)
+        FirebaseFirestore.setLoggingEnabled(true)
+
 
 
         email.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -61,21 +64,9 @@ class LogIn : AppCompatActivity() {
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Code for after successful login
-                   val user= mAuth.currentUser?.uid
-                    val ref= user?.let { db.collection("users").document(it) }
-                    ref?.get()?.addOnSuccessListener {
-                        if (it != null) {
-//                            val name = it.data?.get("name").toString()
-//                            val email = it.data?.get("email").toString()
 
-                            val intent = Intent(this, HomeActivity::class.java)
-//                            intent.putExtra("name", name)
-//                            intent.putExtra("email", email)
-                            startActivity(intent)
-                        }
-
-                    }
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
                 } else {
                     val exception = task.exception
                     if (exception is FirebaseAuthInvalidCredentialsException) {
@@ -86,4 +77,5 @@ class LogIn : AppCompatActivity() {
                 }
             }
     }
+
 }

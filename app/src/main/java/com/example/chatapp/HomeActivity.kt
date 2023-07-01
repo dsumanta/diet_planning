@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -27,22 +28,12 @@ class HomeActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        val name = intent.getStringExtra("name")
-//        val email = intent.getStringExtra("email")
 
         val headerView = navView.getHeaderView(0)
         val mobileName = headerView.findViewById<TextView>(R.id.mobile_name)
         val mobileEmail = headerView.findViewById<TextView>(R.id.mobile_email)
-        val userId= FirebaseAuth.getInstance().currentUser?.uid
-        val db= userId?.let { Firebase.firestore.collection("users").document(it) }
-        db?.get()?.addOnSuccessListener {
-            if(it!=null){
-                val name= it.data?.get("name").toString()
-                val email= it.data?.get("email").toString()
-                mobileName.text = name
-                mobileEmail.text = email
-            }
-        }
+
+
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -58,6 +49,21 @@ class HomeActivity : AppCompatActivity() {
 
         btnOpenDrawer.setOnClickListener {
             drawerLayout.openDrawer(navView)
+            val userId= FirebaseAuth.getInstance().currentUser?.uid
+            FirebaseFirestore.setLoggingEnabled(true)
+
+            val db=FirebaseFirestore.getInstance()
+            val ref = userId?.let { db.collection("users").document(it) }
+
+
+            ref?.get()?.addOnSuccessListener {
+                if(it!=null){
+                    val name= it.data?.get("name").toString()
+                    val email= it.data?.get("email").toString()
+                    mobileName.text = name
+                    mobileEmail.text = email
+                }
+            }
         }
     }
 
