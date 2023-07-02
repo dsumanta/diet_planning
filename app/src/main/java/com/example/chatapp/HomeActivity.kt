@@ -65,6 +65,10 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+        val RecepieFragment = RecepieSuggetion()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragment_container, RecepieFragment, "RecepieFragment") // The third parameter should be a string
+        fragmentTransaction.commit()
     }
 
 
