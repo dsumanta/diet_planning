@@ -1,12 +1,15 @@
 package com.example.chatapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,7 +44,13 @@ class HomeActivity : AppCompatActivity() {
 
                     Toast.makeText(applicationContext, "Clicked Profile", Toast.LENGTH_SHORT).show()
                 }
-                R.id.logout -> Toast.makeText(applicationContext, "Clicked Logout", Toast.LENGTH_SHORT).show()
+                R.id.logout -> {
+                    FirebaseAuth.getInstance().signOut()
+                    // Redirect to login screen
+                    val intent = Intent(this, LogIn::class.java)
+                    startActivity(intent)
+                    finish()
+                }
                 R.id.today_status -> Toast.makeText(applicationContext, "Clicked Today's Status", Toast.LENGTH_SHORT).show()
             }
             true
@@ -65,11 +74,65 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+
+
+        // Default Recepie Fragment
+
+
         val RecepieFragment = RecepieSuggetion()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.fragment_container, RecepieFragment, "RecepieFragment") // The third parameter should be a string
         fragmentTransaction.commit()
+
+        // Replacement of Calorie Fragment
+        val caloriCounter: Button = findViewById(R.id.Calorie_counterBtn)
+        caloriCounter.setOnClickListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is CalorieCounter) {
+                val fragment = CalorieCounter()
+                with(supportFragmentManager.beginTransaction()) {
+                    replace(R.id.fragment_container, fragment)
+                    addToBackStack(null)
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    commit()
+                }
+            }
+        }
+
+
+        // Replacement of Calorie Intake fragment
+
+        val caloriIntake=findViewById<Button>(R.id.calorieIntake_Btn)
+        caloriIntake.setOnClickListener{
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is CalorieIntake) {
+                val fragment = CalorieIntake()
+                with(supportFragmentManager.beginTransaction()) {
+                    replace(R.id.fragment_container, fragment)
+                    addToBackStack(null)
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    commit()
+                }
+            }
+        }
+        // Replacement of water Intake fragment
+
+        val waterIntake=findViewById<Button>(R.id.waterIntake_Btn)
+        waterIntake.setOnClickListener{
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is waterIntake) {
+                val fragment = waterIntake()
+                with(supportFragmentManager.beginTransaction()) {
+                    replace(R.id.fragment_container, fragment)
+                    addToBackStack(null)
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    commit()
+                }
+            }
+        }
     }
+
+
 
 
 }

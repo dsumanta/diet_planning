@@ -29,7 +29,14 @@ class LogIn : AppCompatActivity() {
         val createAccount: TextView = findViewById(R.id.create_account)
         FirebaseFirestore.setLoggingEnabled(true)
 
-
+        val currentUser = mAuth.currentUser
+        if (currentUser != null) {
+            // User is already logged in, redirect to home screen
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
 
         email.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
