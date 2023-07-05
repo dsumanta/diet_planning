@@ -1,0 +1,29 @@
+[33mcommit 867d86dfd747af138fe0d2163bb16e0e9752cbbc[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Sumanta Das <dsumanta31746@gmail.com>
+Date:   Mon Jul 3 12:46:56 2023 +0530
+
+    calorie intake UI is completed
+
+[33mcommit 3a6e406156037ae072adf4f8d551b7270244b333[m
+Author: Sumanta Das <dsumanta31746@gmail.com>
+Date:   Mon Jul 3 01:37:36 2023 +0530
+
+     calorie counter,water intake and calorie intake fragment just implented(But inside fragment logics is not implented so all fragments are blank now).User stay loged in until he prsesd the logout button is implented succesfully
+
+[33mcommit a114889e1af19a2fb54e6deba54f3454b271d0d6[m
+Author: Sumanta Das <dsumanta31746@gmail.com>
+Date:   Sun Jul 2 21:53:36 2023 +0530
+
+    Recepie fragment implemented
+
+[33mcommit 3bc04513fe152e566a2ed721cebf7981de1db55d[m
+Author: Sumanta Das <dsumanta31746@gmail.com>
+Date:   Sat Jul 1 09:46:33 2023 +0530
+
+    Fetched data from firestore on when clicked on navigation button is implented succesfully
+
+[33mcommit cf898e8456264678775ae5cc3c55353b9ad0cd96[m
+Author: Sumanta Das <dsumanta31746@gmail.com>
+Date:   Fri Jun 30 21:23:22 2023 +0530
+
+    Authentication,Navagation drawer implemnted
