@@ -52,4 +52,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // add retrofit dependency
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    // gson
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // picasso for loading images in my Image View
+    implementation 'com.squareup.picasso:picasso:2.8'
+
 }
