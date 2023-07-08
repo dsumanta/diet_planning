@@ -13,7 +13,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private fun Any.enqueue(callback: Callback<FoodItem?>) {
+fun Any.enqueue(callback: Callback<FoodItem?>) {
 
 }
 
@@ -40,7 +40,7 @@ class RecepieSuggetion : Fragment() {
             .create(APIinterfaceFood::class.java)
 
         val retrofitData = retrofitBuilder.searchRecipesByNutrients(
-            apiKey = "122b65e914df4116b8e55c2aa9c93fe7",
+            apiKey = "7f3f2a79857b4554976d3d101381346b",
             number = 100,
             maxCalories = 800
         )

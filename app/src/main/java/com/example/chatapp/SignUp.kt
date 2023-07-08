@@ -18,6 +18,7 @@ class SignUp : AppCompatActivity() {
     private lateinit var height: EditText
     private lateinit var password: EditText
     private lateinit var signUpButton: Button
+    private lateinit var weight:EditText
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -35,7 +36,9 @@ class SignUp : AppCompatActivity() {
         email = findViewById(R.id.Sign_up_mail)
         height = findViewById(R.id.Sign_up_Height)
         password = findViewById(R.id.Sign_up_Password)
+        weight=findViewById(R.id.Sign_up_Weight)
         signUpButton = findViewById(R.id.Signup_Button)
+
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -55,12 +58,12 @@ class SignUp : AppCompatActivity() {
             val emailTxt = email.text.toString()
             val heightTxt = height.text.toString()
             val passwordTxt = password.text.toString()
-
+            val weightTxt = weight.text.toString()
             if (passwordTxt.length < 6) {
                 password.error = "Password should be at least 6 characters long"
             } else {
                 password.error = null
-                appSignUp(nameTxt, ageTxt, emailTxt, heightTxt, passwordTxt)
+                appSignUp(nameTxt, ageTxt, emailTxt, heightTxt, passwordTxt,weightTxt)
             }
         }
     }
@@ -70,7 +73,8 @@ class SignUp : AppCompatActivity() {
         age: String,
         email: String,
         height: String,
-        password: String
+        password: String,
+        weight : String
     ) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -82,7 +86,8 @@ class SignUp : AppCompatActivity() {
                         "name" to name,
                         "age" to age,
                         "email" to email,
-                        "height" to height
+                        "height" to height,
+                        "weight" to weight
                     )
 
                     if (userId != null) {

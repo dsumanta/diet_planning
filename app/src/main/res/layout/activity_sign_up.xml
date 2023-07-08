@@ -59,6 +59,16 @@
                 android:layout_height="wrap_content"
                 android:padding="15dp"
                 android:inputType="number"
+                android:hint="Weight in kg"
+                android:textStyle="bold"
+                android:id="@+id/Sign_up_Weight"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_background"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:inputType="number"
                 android:hint="Height in cm"
                 android:textStyle="bold"
                 android:id="@+id/Sign_up_Height"
