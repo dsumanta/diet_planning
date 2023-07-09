@@ -1,11 +1,14 @@
 package com.example.chatapp
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,12 +24,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import com.google.firebase.auth.FirebaseAuth
+
 class CalorieIntake : Fragment() {
 
     private lateinit var mySpinner: Spinner
     private lateinit var recyclerView: RecyclerView
     private lateinit var userId: String // Add a variable to hold the current user ID
-
+    private lateinit var mealOption: String // Add a variable to hold the selected meal option
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_calorie_intake, container, false)
@@ -49,6 +53,16 @@ class CalorieIntake : Fragment() {
             userId = mAuth
         }
 
+        // Set the meal option listener
+        mySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mealOption = options[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing
+            }
+        }
 
         // Fetching API
         recyclerView = view.findViewById(R.id.recyclerView_searchFood)
@@ -95,9 +109,17 @@ class CalorieIntake : Fragment() {
                         val productList = responseBody.items
 
                         // Create an instance of the ItemAdapter with the current user ID
-                        val myAdapter = ItemAdapter(productList,ItemAdapter.MyClickListner)
+                        val myAdapter = ItemAdapter(productList)
 
                         recyclerView.adapter = myAdapter
+                        myAdapter.setItemClickListner(object : ItemAdapter.ItemClickListner {
+                            override fun OnItemClick(position: Int) {
+                                val item = productList[position]
+                                addFoodItemToFirestore(item, mealOption, userId)
+                            }
+
+
+                        })
                     } else {
                         Log.d("CaloriIntake", "Response body is null")
                     }
@@ -139,39 +161,10 @@ class CalorieIntake : Fragment() {
             .add(foodData)
             .addOnSuccessListener { documentReference ->
                 Log.d("CalorieIntake", "Food item added to Firestore successfully. Document ID: ${documentReference.id}")
-
-                // Calculate the sum of calories for the meal option
-                calculateSumOfCalories(mealOptionDocRef)
+                Toast.makeText(requireContext(),"Calorie with food added successfully",Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Log.e("CalorieIntake", "Error adding food item to Firestore.", e)
-            }
-    }
-
-    private fun calculateSumOfCalories(mealOptionDocRef: DocumentReference) {
-        mealOptionDocRef.collection("foods")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                var sumOfCalories = 0
-
-                for (document in querySnapshot) {
-                    val calories = document.getLong("calories")
-                    if (calories != null) {
-                        sumOfCalories += calories.toInt()
-                    }
-                }
-
-                // Update the sum of calories in the meal option document
-                mealOptionDocRef.update("sumOfCalories", sumOfCalories)
-                    .addOnSuccessListener {
-                        Log.d("CalorieIntake", "Sum of calories updated successfully in Firestore.")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("CalorieIntake", "Error updating sum of calories in Firestore.", e)
-                    }
-            }
-            .addOnFailureListener { e ->
-                Log.e("CalorieIntake", "Error calculating sum of calories in Firestore.", e)
             }
     }
 

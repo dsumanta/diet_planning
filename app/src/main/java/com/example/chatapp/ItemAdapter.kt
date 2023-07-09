@@ -7,28 +7,29 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ItemAdapter(
-    private val mList: List<Item>,
-    private val listener: (Int) -> Unit
+    private val mList: List<Item>
 ) : RecyclerView.Adapter<ItemAdapter.LanguageViewHolder>() {
-
-    inner class LanguageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private lateinit var myListner: ItemClickListner
+    interface ItemClickListner{
+        fun OnItemClick(position: Int)
+    }
+    fun setItemClickListner(listner: ItemClickListner){
+       myListner=listner
+    }
+    inner class LanguageViewHolder(itemView: View,listner:ItemClickListner) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.search_food_name)
         val calorie: TextView = itemView.findViewById(R.id.search_food_acalorie)
 
         init {
             itemView.setOnClickListener {
-                val position = adapterPosition
-
-                if (position != RecyclerView.NO_POSITION) {
-                    listener(position)
-                }
+               listner.OnItemClick(adapterPosition)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.search_food_view, parent, false)
-        return LanguageViewHolder(view)
+        return LanguageViewHolder(view,myListner)
     }
 
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
@@ -41,10 +42,5 @@ class ItemAdapter(
         return mList.size
     }
 
-    companion object {
-        val MyClickListner: (Int) -> Unit
-            get() {
-                TODO()
-            }
-    }
+
 }
