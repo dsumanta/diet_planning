@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="#EFCEC3"
     tools:context=".CalorieIntake">
+
     <TextView
         android:layout_width="match_parent"
         android:text="Your Daily Calorie calculation"
@@ -17,12 +18,12 @@
         android:background="#8997E1"
         android:padding="5dp"
         android:layout_height="35dp"/>
+
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        >
+        android:layout_margin="10dp">
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
@@ -61,20 +62,28 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-   <FrameLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-       <androidx.recyclerview.widget.RecyclerView
-           android:id="@+id/recyclerView_searchFood"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           app:layout_constraintBottom_toBottomOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="0.5"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_searchFood"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
-   </FrameLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/see_your_current_status"
+            android:text="See your today Status"
+            android:layout_gravity="bottom|center_horizontal" />
+
+    </FrameLayout>
 
 </LinearLayout>

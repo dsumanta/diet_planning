@@ -1,5 +1,7 @@
 package com.example.chatapp
 
+import java.io.Serializable
+
 data class Item(
     val calories: Double,
     val carbohydrates_total_g: Double,
@@ -13,4 +15,4 @@ data class Item(
     val serving_size_g: Double,
     val sodium_mg: Int,
     val sugar_g: Double
-)
+): Serializable

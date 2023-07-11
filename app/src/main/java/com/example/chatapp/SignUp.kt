@@ -6,6 +6,7 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -21,7 +22,8 @@ class SignUp : AppCompatActivity() {
     private lateinit var weight:EditText
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-
+    private lateinit var radioGroupGender:RadioGroup
+    private lateinit var selectedGender:String
     private fun isValidEmail(editText: EditText): Boolean {
         val email = editText.text.toString().trim()
         val pattern = Patterns.EMAIL_ADDRESS
@@ -38,7 +40,17 @@ class SignUp : AppCompatActivity() {
         password = findViewById(R.id.Sign_up_Password)
         weight=findViewById(R.id.Sign_up_Weight)
         signUpButton = findViewById(R.id.Signup_Button)
+        radioGroupGender=findViewById(R.id.radioGroupGender)
 
+
+        radioGroupGender.setOnCheckedChangeListener{ _,checkedId->
+            selectedGender=when(checkedId){
+                R.id.radioButtonMale->"male"
+                R.id.radioButtonFemale->"female"
+                else->""
+            }
+
+        }
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -59,11 +71,12 @@ class SignUp : AppCompatActivity() {
             val heightTxt = height.text.toString()
             val passwordTxt = password.text.toString()
             val weightTxt = weight.text.toString()
+            val gender=selectedGender.toString()
             if (passwordTxt.length < 6) {
                 password.error = "Password should be at least 6 characters long"
             } else {
                 password.error = null
-                appSignUp(nameTxt, ageTxt, emailTxt, heightTxt, passwordTxt,weightTxt)
+                appSignUp(nameTxt, ageTxt, emailTxt, heightTxt, passwordTxt,weightTxt,gender)
             }
         }
     }
@@ -74,7 +87,8 @@ class SignUp : AppCompatActivity() {
         email: String,
         height: String,
         password: String,
-        weight : String
+        weight : String,
+        gender :String
     ) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -87,7 +101,8 @@ class SignUp : AppCompatActivity() {
                         "age" to age,
                         "email" to email,
                         "height" to height,
-                        "weight" to weight
+                        "weight" to weight,
+                        "gender" to gender
                     )
 
                     if (userId != null) {

@@ -1,6 +1,7 @@
 package com.example.chatapp
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentTransaction
+import com.example.chatapp.profile.ProfileActivity
+import com.example.chatapp.todayStatus.TodayStatus
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,8 +44,9 @@ class HomeActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.profile -> {
-
-                    Toast.makeText(applicationContext, "Clicked Profile", Toast.LENGTH_SHORT).show()
+                     val intent=Intent(this,ProfileActivity::class.java)
+                     startActivity(intent)
+                   // Toast.makeText(applicationContext, "Clicked Profile", Toast.LENGTH_SHORT).show()
                 }
                 R.id.logout -> {
                     FirebaseAuth.getInstance().signOut()
@@ -51,7 +55,11 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
-                R.id.today_status -> Toast.makeText(applicationContext, "Clicked Today's Status", Toast.LENGTH_SHORT).show()
+                R.id.today_status ->{
+//                   val intent=Intent(this,TodayStatus::class.java)
+//                   startActivity(intent)
+                    Toast.makeText(applicationContext, "Open it on by clicking on see your home button in home screen", Toast.LENGTH_SHORT).show()
+                }
             }
             true
         }
@@ -87,6 +95,7 @@ class HomeActivity : AppCompatActivity() {
         // Replacement of Calorie Fragment
         val caloriCounter: Button = findViewById(R.id.Calorie_counterBtn)
         caloriCounter.setOnClickListener {
+
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is CalorieCounter) {
                 val fragment = CalorieCounter()
@@ -104,6 +113,7 @@ class HomeActivity : AppCompatActivity() {
 
         val caloriIntake=findViewById<Button>(R.id.calorieIntake_Btn)
         caloriIntake.setOnClickListener{
+
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is CalorieIntake) {
                 val fragment = CalorieIntake()
