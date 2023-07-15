@@ -22,7 +22,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.flow.callbackFlow
+import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CalorieIntake : Fragment() {
 
@@ -97,13 +100,13 @@ class CalorieIntake : Fragment() {
             }
         })
 
-        val showStatusButton = view.findViewById<Button>(R.id.see_your_current_status)
-        showStatusButton.setOnClickListener {
-            val intent = Intent(requireContext(), TodayStatus::class.java)
-            intent.putExtra("myListKey", caloriList)
-            Log.d("CaloriIntake","Calorilist $caloriList")
-            startActivity(intent)
-        }
+       val showStatusButton = view.findViewById<Button>(R.id.see_your_current_status)
+       showStatusButton.setOnClickListener {
+          val intent = Intent(requireContext(), TodayStatus::class.java)
+//            intent.putExtra("myListKey", caloriList)
+//            Log.d("CaloriIntake","Calorilist $caloriList")
+           startActivity(intent)
+       }
 
     }
 
@@ -137,10 +140,10 @@ class CalorieIntake : Fragment() {
                         myAdapter.setItemClickListner(object : ItemAdapter.ItemClickListner {
                             override fun OnItemClick(position: Int) {
                                 val item = productList[position]
-                                // addFoodItemToFirestore(item, mealOption, userId)
-                                Toast.makeText(requireContext(), "${item.name} with ${item.calories} is added", Toast.LENGTH_SHORT).show()
-                                caloriList.add(item)
 
+                                //Toast.makeText(requireContext(), "${item.name} with ${item.calories} is added", Toast.LENGTH_SHORT).show()
+                                caloriList.add(item)
+                                addFoodItemToFirestore(item,userId,caloriList)
                             }
                         })
                     } else {
@@ -159,42 +162,102 @@ class CalorieIntake : Fragment() {
 
     }
 
-//    private fun addFoodItemToFirestore(foodItem: Item, mealOption: String, userId: String) {
-//        val firestore = FirebaseFirestore.getInstance()
-//
-//        // Get the current date
-//        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-//
-//        // Create a reference to the user's document
-//        val userDocRef = firestore.collection("users").document(userId)
-//
-//        // Create a reference to the date document under the user's document
-//
-//        val dateDocRef = userDocRef.collection("dates").document(currentDate)
-//
-//        // Create a reference to the meal option document under the date document
-//        val mealOptionDocRef = dateDocRef.collection("mealOptions").document(mealOption)
-//
-//        // Create a data object to represent the food item
-//        val foodData = hashMapOf(
-//            "name" to foodItem.name,
-//            "calories" to foodItem.calories
-//        )
-//
-//        // Add the food item to the respective meal option
-//        mealOptionDocRef.collection("foods")
-//            .add(foodData)
-//            .addOnSuccessListener { documentReference ->
-//                Log.d("CalorieIntake", "Food item added to Firestore successfully. Document ID: ${documentReference.id}")
-//                Toast.makeText(requireContext(),"Calorie with food added successfully",Toast.LENGTH_SHORT).show()
-//            }
-//            .addOnFailureListener { e ->
-//                Log.e("CalorieIntake", "Error adding food item to Firestore.", e)
-//            }
-//    }
+
+    private fun addFoodItemToFirestore(foodItem: Item, userId: String, caloriList: ArrayList<Item>) {
+        // Check if the food item is already in the caloriList
+
+            caloriList.add(foodItem)
+
+            val firestore = FirebaseFirestore.getInstance()
+
+            // Get the current date
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+            // Create a composite ID using the user ID and current date
+            val documentId = "$userId-$currentDate"
+
+            // Create a reference to the diet collection
+            val dietCollectionRef = firestore.collection("diet")
+
+            // Create a reference to the existing document for the current date and user
+            val dietDocRef = dietCollectionRef.document(documentId)
+
+            // Check if the document exists for the current date and user
+            dietDocRef.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        // Document exists, retrieve the "foods" field
+                        val existingFoods = documentSnapshot.get("foods") as? ArrayList<HashMap<String, Any>> ?: ArrayList()
+
+                        // Check if the food item already exists in the "foods" array
+                        val foodExists = existingFoods.any { it["name"] == foodItem.name }
+                        if(foodExists){
+                            for (existingFood in existingFoods) {
+                                if (existingFood["name"] == foodItem.name) {
+                                    val existingCalories = existingFood["calories"] as? Double ?: 0.0
+                                    Log.d("Sumanta","$existingCalories")
+                                    val newCalories = existingCalories + foodItem.calories
+                                    existingFood["calories"] = newCalories
+                                    Log.d("Sumanta2","${existingFood["calories"]}")
+                                    break
+                                }
+                            }
+                            dietDocRef.update("foods", existingFoods)
+                            Toast.makeText(requireContext(), "Food already exists. Calories added.", Toast.LENGTH_SHORT).show()
+
+                        }
+                        else{
+                            // Add the new food item to the "foods" array
+                            existingFoods.add(
+                                hashMapOf(
+                                    "name" to foodItem.name,
+                                    "calories" to foodItem.calories
+                                )
+                            )
+
+                            // Update the "foods" field of the existing document
+                            dietDocRef.update("foods", existingFoods)
+                                .addOnSuccessListener {
+                                    Log.d("CalorieIntake", "Diet entry updated in Firestore successfully. Document ID: $documentId")
+                                    Toast.makeText(requireContext(), "Calorie with food added successfully", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("CalorieIntake", "Error updating diet entry in Firestore.", e)
+                                }
+                        }
+                    } else {
+                        // Document doesn't exist, create a new document with the food item
+                        val dietData = hashMapOf(
+                            "userId" to userId,
+                            "date" to currentDate,
+                            "foods" to arrayListOf<HashMap<String, Any>>(
+                                hashMapOf(
+                                    "name" to foodItem.name,
+                                    "calories" to foodItem.calories
+                                )
+                            )
+                        )
+
+                        // Add the diet entry to Firestore with the composite document ID
+                        dietDocRef.set(dietData)
+                            .addOnSuccessListener {
+                                Log.d("CalorieIntake", "Diet entry added to Firestore successfully. Document ID: $documentId")
+                                Toast.makeText(requireContext(), "Calorie with food added successfully", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("CalorieIntake", "Error adding diet entry to Firestore.", e)
+                            }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("CalorieIntake", "Error checking diet entry in Firestore.", e)
+                }
+        }
+
+
 
 }
 
-private fun Intent.putStringArrayListExtra(s: String, caloriList: ArrayList<Item>) {
 
-}
+
+

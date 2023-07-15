@@ -56,9 +56,9 @@ class HomeActivity : AppCompatActivity() {
                     finish()
                 }
                 R.id.today_status ->{
-//                   val intent=Intent(this,TodayStatus::class.java)
-//                   startActivity(intent)
-                    Toast.makeText(applicationContext, "Open it on by clicking on see your home button in home screen", Toast.LENGTH_SHORT).show()
+                   val intent=Intent(this,TodayStatus::class.java)
+                   startActivity(intent)
+                    //Toast.makeText(applicationContext, "Open it on by clicking on see your home button in home screen", Toast.LENGTH_SHORT).show()
                 }
             }
             true

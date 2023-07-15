@@ -62,7 +62,7 @@ class CalorieCounter : Fragment() {
                 if (gender == "male" && age != null && weight != null && height != null) {
                     maleCalculation = 66.5 + (13.75 * weight) + (5.003 * height) - (6.75 * age)
                 } else if (gender == "female" && age != null && weight != null && height != null) {
-                    femaleCalculation = 65.51 + (9.563 * weight) + (1.850 * height) - (6.75 * age)
+                    femaleCalculation = 655.1 + (9.563 * weight) + (1.850 * height) - (6.75 * age)
                 }
 
                 Log.d("caloriecounter", "Male Calculation: $maleCalculation")

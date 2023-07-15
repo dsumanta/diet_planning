@@ -3,7 +3,7 @@ package com.example.chatapp
 import java.io.Serializable
 
 data class Item(
-    val calories: Double,
+    var calories: Double,
     val carbohydrates_total_g: Double,
     val cholesterol_mg: Int,
     val fat_saturated_g: Double,
